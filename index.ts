@@ -1,15 +1,15 @@
-import { Observable, fromEvent } from 'rxjs';
-import { throttleTime, scan, map } from 'rxjs/operators';
+import { Observable, fromEvent, of, interval } from "rxjs";
+import { throttleTime, scan, map } from "rxjs/operators";
 
 //1. Document Click Example
-fromEvent(document, 'click').subscribe(() => console.log('Clicked!'));
+// fromEvent(document, 'click').subscribe(() => console.log('Clicked!'));
 
 //2. foo observable multiple calls Example
 // const foo = new Observable(subscriber => {
 //   console.log('Hello');
-//   subscriber.next(42);
+//   subscriber.next(30);
 // });
- 
+
 // foo.subscribe(x => {
 //   console.log(x);
 // });
@@ -34,10 +34,11 @@ fromEvent(document, 'click').subscribe(() => console.log('Clicked!'));
 // console.log('Before calling subscribe on Observable');
 // greetingLady$.subscribe({
 //   next: console.log,
+//   error: console.log,
 //   complete: () => console.log('End of conversation with preety lady')
 // });
 
-//Another way of writing the same piece of above code, this is also a very common practice 
+//Another way of writing the same piece of above code, this is also a very common practice
 // greetingLady$.subscribe((res) => {
 //  console.log(res),
 //  console.log('End of conversation with preety lady')
@@ -58,10 +59,12 @@ fromEvent(document, 'click').subscribe(() => console.log('Clicked!'));
 //   map(event => event.clientX),
 //   scan((count, clientX) => count + clientX, 0)
 // )
-// .subscribe(count => console.log(count));
+// .subscribe((count) => console.log(count),
+// (err) => {
+//   //error handling
+// });
 
-
-//7. Function & observable 
+//7. Function & observable
 
 // function myFun(){
 //   return 10;
@@ -72,16 +75,39 @@ fromEvent(document, 'click').subscribe(() => console.log('Clicked!'));
 //   subscriber.next(1);
 //   subscriber.next(2);
 //   subscriber.next(3);
+//   subscriber.next(4);
+//   subscriber.next(5);
+//   subscriber.next(6);
 //   setTimeout(() => {
-//     subscriber.next(4);
+//     subscriber.next(7);
 //     subscriber.complete();
 //   }, 1000);
 // });
 
-// console.log('just before subscribe');
+// // console.log('just before subscribe');
 // observable.subscribe({
 //   next(x) { console.log('got value ' + x); },
 //   error(err) { console.error('something wrong occurred: ' + err); },
 //   complete() { console.log('done'); }
 // });
 // console.log('just after subscribe');
+
+//8.
+// map(x => x * x)(of(1, 2, 3)).subscribe((data) => console.log(`value: ${data}`));
+
+//9.
+// const interObservable = interval(1000);
+// interObservable.subscribe(x => {
+//   console.log(x);
+// })
+
+//10.
+
+//Service to API Call
+var myObservable = of("Arpit", "Anant", "Moh.", "Sandeep").pipe(
+  map(x => x + "!!")
+);
+
+//component that will calll this above observable..
+var mySubscription = myObservable.subscribe(x => console.log(x));
+mySubscription.unsubscribe();
